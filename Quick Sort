@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// Quick Sort Partition Function
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];
+    int i = (low - 1);
+
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j] <= pivot) {
+            i++;
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+
+    int temp = arr[i + 1];
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
+
+    return (i + 1);
+}
+
+// Quick Sort Function
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+// Function to generate random values for an attribute
+void generateValues(int arr[], int n) {
+    srand(time(NULL));
+    for (int i = 0; i < n; i++) {
+        arr[i] = rand() % 100 + 1;
+        printf("%d \n", arr[i]);
+    }
+}
+
+int main() {
+    int n;
+    printf("Enter the number of students: ");
+    scanf("%d", &n);
+
+    int *usn = (int *)malloc(n * sizeof(int));
+
+    generateValues(usn, n);
+
+    // Perform Quick Sort and measure time
+    clock_t start = clock();
+    quickSort(usn, 0, n - 1);
+    clock_t end = clock();
+
+    double timeTaken = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+    printf("Sorted Student Records:\n");
+    for (int i = 0; i < n; i++) {
+        printf("USN: %d \n", usn[i]);
+    }
+
+    printf("Time taken: %lf seconds\n", timeTaken);
+
+    free(usn);
+
+    return 0;
+}
