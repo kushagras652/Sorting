@@ -1,0 +1,116 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// Employee structure
+typedef struct {
+    int employeeID;
+} Employee;
+
+// Merge Function for Merge Sort
+void merge(Employee arr[], int left, int mid, int right) {
+    int i, j, k;
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    // Create temporary arrays
+    Employee L[n1], R[n2];
+
+    // Copy data to temporary arrays
+    for (i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+
+    // Merge the temporary arrays back into arr[]
+    i = 0; // Initial index of first subarray
+    j = 0; // Initial index of second subarray
+    k = left; // Initial index of merged subarray
+
+    while (i < n1 && j < n2) {
+        if (L[i].employeeID <= R[j].employeeID) {
+            arr[k] = L[i];
+            i++;
+        }
+        else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    // Copy the remaining elements of L[], if there are any
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    // Copy the remaining elements of R[], if there are any
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+// Merge Sort Function
+void mergeSort(Employee arr[], int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+
+        merge(arr, left, mid, right);
+    }
+}
+
+// Function to generate random employee IDs
+void generateEmployeeIDs(int arr[], int n) {
+    srand(time(NULL));
+    for (int i = 0; i < n; i++) {
+        arr[i] = rand() % 100 + 1;// Generate random IDs between 1 and 1000
+		printf("%d \n"  ,arr[i]);
+    }
+}
+
+
+int main() {
+    int n;
+    printf("Enter the number of employees: ");
+    scanf("%d", &n);
+
+    Employee *employees = (Employee *)malloc(n * sizeof(Employee));
+    int *employeeIDs = (int *)malloc(n * sizeof(int));
+
+
+    generateEmployeeIDs(employeeIDs, n);
+
+
+    // Populate the employee records
+    for (int i = 0; i < n; i++) {
+        employees[i].employeeID = employeeIDs[i];
+
+    }
+
+    // Perform Merge Sort and measure time
+    clock_t start = clock();
+    mergeSort(employees, 0, n - 1);
+    clock_t end = clock();
+
+    double timeTaken = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+    printf("Sorted Employee Records:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Employee ID: %d \n", employees[i].employeeID);
+    }
+
+    printf("Time taken: %lf seconds\n", timeTaken);
+
+    free(employees);
+    free(employeeIDs);
+
+
+    return 0;
+}
