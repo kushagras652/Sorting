@@ -1,0 +1,91 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// Binary Search Function
+int binarySearch(int arr[], int low, int high, int key) {
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        
+        if (arr[mid] == key)
+            return mid;
+        
+        if (arr[mid] < key)
+            low = mid + 1;
+        
+        else
+            high = mid - 1;
+    }
+    
+    return -1;
+}
+
+// Bubble Sort Function
+void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                // Swap arr[j] and arr[j+1]
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+// Function to generate random product IDs
+void generateProductIDs(int arr[], int n) {
+    srand(time(NULL));
+    for (int i = 0; i < n; i++) {
+        arr[i] = rand() % 100 + 1; // Generate random IDs between 1 and 1000
+        printf("%d \t",arr[i]);
+    }
+}
+
+int main() {
+    int n;
+    printf("Enter the number of products: ");
+    scanf("%d", &n);
+    
+    int *productIDs = (int *)malloc(n * sizeof(int));
+    generateProductIDs(productIDs, n);
+    printf("\n");
+    
+          // Perform Bubble Sort and measure time
+//    clock_t start = clock();
+    bubbleSort(productIDs, n);
+//    clock_t end = clock();
+    
+//    double timeTakenSort = ((double)(end - start)) / CLOCKS_PER_SEC;
+    
+    printf("Sorted Employee IDs:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d \t", productIDs[i]);
+    }
+    
+    int searchKey;
+    printf("\n");
+    printf("Enter the product ID to search: \n");
+    scanf("%d", &searchKey);
+    
+//    printf("\nTime taken for sorting: %lf seconds\n", timeTakenSort);
+    
+    // Perform Binary Search and measure time
+    clock_t start = clock();
+    int result = binarySearch(productIDs, 0, n - 1, searchKey);
+    clock_t end = clock();
+    
+    double timeTaken = ((double)(end - start)) / CLOCKS_PER_SEC;
+    
+    if (result != -1)
+        printf("Product ID %d is available in stock.\n", searchKey);
+    else
+        printf("Product ID %d is not available in stock.\n", searchKey);
+    
+    printf("Time taken: %lf seconds\n", timeTaken);
+    
+    free(productIDs);
+    
+    return 0;
+}
