@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// Heapify the subtree rooted at index i
+void heapify(int rankings[], int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    // Compare the left child with the root
+    if (left < n && rankings[left] > rankings[largest])
+        largest = left;
+
+    // Compare the right child with the largest so far
+    if (right < n && rankings[right] > rankings[largest])
+        largest = right;
+
+    // If the largest is not the root, swap them and heapify the affected subtree
+    if (largest != i) {
+        // Swap rankings
+        int tempRanking = rankings[i];
+        rankings[i] = rankings[largest];
+        rankings[largest] = tempRanking;
+
+
+        // Recursively heapify the affected subtree
+        heapify(rankings, n, largest);
+    }
+}
+
+// Heap Sort function
+void heapSort(int rankings[], int n) {
+    // Build the heap (rearrange the array)
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapify(rankings, n, i);
+
+    // Extract elements from the heap one by one
+    for (int i = n - 1; i >= 0; i--) {
+        // Swap the root (maximum element) with the last element
+        int tempRanking = rankings[0];
+        rankings[0] = rankings[i];
+        rankings[i] = tempRanking;
+
+
+
+        // Heapify the reduced heap
+        heapify(rankings, i, 0);
+    }
+}
+
+// Function to generate random rankings
+void generateRankings(int rankings[], int n) {
+    srand(time(NULL));
+    for (int i = 0; i < n; i++) {
+        rankings[i] = rand() % 100 + 1; // Generate random rankings between 1 and 100
+        printf("%d \n",rankings[i]);
+    }
+}
+
+int main() {
+    int n;
+    printf("Enter the number of resumes: ");
+    scanf("%d", &n);
+
+    int *rankings = (int *)malloc(n * sizeof(int));
+
+    generateRankings(rankings, n);
+
+
+    // Perform Heap Sort and measure time
+    clock_t start = clock();
+    heapSort(rankings, n);
+    clock_t end = clock();
+
+    double timeTaken = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+    printf("Sorted Resumes:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Ranking: %d \n", rankings[i]);
+    }
+
+    printf("Time taken: %lf seconds\n", timeTaken);
+
+    free(rankings);
+
+
+    return 0;
+}
