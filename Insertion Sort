@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// Insertion Sort Function
+void insertionSort(long long arr[], int n) {
+    for (int i = 1; i < n; i++) {
+        long long key = arr[i];
+        int j = i - 1;
+        
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        
+        arr[j + 1] = key;
+    }
+}
+
+// Function to generate random phone numbers
+void generatePhoneNumbers(long long arr[], int n) {
+    srand(time(NULL));
+    for (int i = 0; i < n; i++) {
+        arr[i] = rand() % 9000000000 + 100000000; // Generate 10-digit phone numbers
+        printf("%d \n",arr[i]);
+    }
+}
+
+int main() {
+    int n;
+    printf("Enter the number of phone numbers: ");
+    scanf("%d", &n);
+    
+    long long *phoneNumbers = (long long *)malloc(n * sizeof(long long));
+    generatePhoneNumbers(phoneNumbers, n);
+    
+    // Perform Insertion Sort and measure time
+    clock_t start = clock();
+    insertionSort(phoneNumbers, n);
+    clock_t end = clock();
+    
+    double timeTaken = ((double)(end - start)) / CLOCKS_PER_SEC;
+    
+    printf("Sorted Phone Numbers:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%lld\n", phoneNumbers[i]);
+    }
+    
+    printf("Time taken: %lf seconds\n", timeTaken);
+   
+    free(phoneNumbers);
+    
+    return 0;
+}
