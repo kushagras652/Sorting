@@ -1,0 +1,51 @@
+#include <stdio.h>
+
+int max(int x, int y) {
+    return ((x > y) ? x : y);
+}
+
+int knapsack(int N, int W, int profit[], int weight[]) {
+    int dp[N + 1][W + 1];
+
+    for (int i = 0; i <= N; i++) {
+        for (int w = 0; w <= W; w++) {
+            if (i == 0 || w == 0)
+                dp[i][w] = 0;
+            else if (weight[i - 1] <= w)
+                dp[i][w] = max(profit[i - 1] + dp[i - 1][w - weight[i - 1]], dp[i - 1][w]);
+            else
+                dp[i][w] = dp[i - 1][w];
+        }
+    }
+    return dp[N][W];
+}
+
+int main() {
+    int N; // Number of items
+    printf("Enter the number of items: ");
+    scanf("%d", &N);
+
+    int profit[N], weight[N]; // Arrays to store profit and weight of each item
+
+    printf("Enter the weight of each item:\n");
+    for (int i = 0; i < N; i++) {
+        printf("Item %d: ", i + 1);
+        scanf("%d", &weight[i]);
+    }
+    
+    printf("Enter the profit  of each item:\n");
+    for (int i = 0; i < N; i++) {
+        printf("Item %d: ", i + 1);
+        scanf("%d", &profit[i]);
+    }
+
+    int W; // Knapsack capacity
+    printf("Enter the knapsack capacity: ");
+    scanf("%d", &W);
+
+    int maxProfit = knapsack(N, W, profit, weight);
+
+    printf("Maximum Profit: %d\n", maxProfit);
+
+    return 0;
+}
