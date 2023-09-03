@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <time.h>
+#include <limits.h>
+
+// Define a constant representing infinity
+#define INFINITY 999
+
+int min(int x, int y) {
+    return (x < y) ? x : y;
+}
+
+void floyd(int n, int w[10][10], int D[10][10]) {
+    // Initialize the distance matrix with the cost matrix
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            D[i][j] = w[i][j];
+        }
+    }
+
+    // Apply the Floyd-Warshall algorithm
+    for (int k = 0; k < n; k++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (D[i][k] != INFINITY && D[k][j] != INFINITY) {
+                    D[i][j] = min(D[i][j], D[i][k] + D[k][j]);
+                }
+            }
+        }
+    }
+}
+
+int main() {
+    int n, D[10][10], w[10][10];
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter cost matrix:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            // Use 999 for representing infinity in the cost matrix
+            scanf("%d", &w[i][j]);
+            if (w[i][j] == 999) {
+                w[i][j] = INFINITY;
+            }
+        }
+    }
+
+    floyd(n, w, D);
+
+    printf("Shortest path:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            // Print INFINITY as 999 in the output
+            if (D[i][j] == INFINITY) {
+                printf("999\t");
+            } else {
+                printf("%d\t", D[i][j]);
+            }
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
