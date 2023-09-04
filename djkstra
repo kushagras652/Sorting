@@ -1,0 +1,69 @@
+#include <stdio.h>
+#define MAX 10
+
+int choose(int dist[], int s[], int n) {
+    int min = 999; // Initialize with a large value
+    int j = -1;    // Initialize with an invalid value
+
+    for (int w = 1; w <= n; w++) {
+        if (dist[w] < min && s[w] == 0) {
+            min = dist[w];
+            j = w;
+        }
+    }
+
+    return j;
+}
+
+void path(int v, int cost[][MAX], int dist[], int n) {
+    int w, num, s[MAX];
+
+    for (int i = 1; i <= n; i++) {
+        s[i] = 0;
+        if (i != v) {
+            dist[i] = cost[v][i];
+        }
+    }
+
+    s[v] = 1;
+    dist[v] = 0; // Correct initialization for the source vertex
+
+    for (num = 2; num <= n; num++) {
+        v = choose(dist, s, n);
+        s[v] = 1;
+
+        for (w = 1; w <= n; w++) {
+            if (!s[w] && (dist[v] + cost[v][w]) < dist[w]) {
+                dist[w] = dist[v] + cost[v][w];
+            }
+        }
+    }
+}
+
+int main() {
+    int n, v;
+    printf("Enter the number of vertices: ");
+    scanf("%d", &n);
+
+    int cost[MAX][MAX];
+    int dist[MAX];
+
+    printf("Enter the cost matrix (use 999 for infinity):\n");
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            scanf("%d", &cost[i][j]);
+        }
+    }
+
+    printf("Enter the source vertex: ");
+    scanf("%d", &v);
+
+    path(v, cost, dist, n);
+
+    printf("Shortest distances from vertex %d:\n", v);
+    for (int i = 1; i <= n; i++) {
+        printf("Vertex %d: %d\n", i, dist[i]);
+    }
+
+    return 0;
+}
