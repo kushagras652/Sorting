@@ -1,0 +1,46 @@
+#include <stdio.h>
+
+void bfs(int adj[][10], int total, int source) {
+    int visited[10];
+    for (int i = 0; i < total; i++) {
+        visited[i] = 0;
+    }
+
+    int q[10], front = 0, rear = -1;
+    q[++rear] = source;
+    visited[source] = 1;
+
+    printf("BFS Traversal\n");
+
+    while (front <= rear) {
+        int current = q[front++];
+        for (int v = 0; v < total; v++) {
+            if (adj[current][v] == 1 && visited[v] == 0) {
+                q[++rear] = v;
+                visited[v] = 1;
+                printf("%d --> %d\n", current, v);
+            }
+        }
+    }
+}
+
+int main() {
+    int total, source;
+    printf("Enter the total number of nodes: ");
+    scanf("%d", &total);
+
+    int adj[10][10];
+    printf("Enter the adjacency matrix:\n");
+    for (int i = 0; i < total; i++) {
+        for (int j = 0; j < total; j++) {
+            scanf("%d", &adj[i][j]);
+        }
+    }
+
+    printf("Enter the source node: ");
+    scanf("%d", &source);
+
+    bfs(adj, total, source);
+
+    return 0;
+}
